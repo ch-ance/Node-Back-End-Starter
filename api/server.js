@@ -19,7 +19,7 @@ server.get('/', (_req, res) => {
     res.send('Server is up and running')
 })
 
-server.get('/api/users', restricted, (_req, res) => {
+server.get('/api/users', (_req, res) => {
     Users.find()
         .then(users => {
             res.json(users)
