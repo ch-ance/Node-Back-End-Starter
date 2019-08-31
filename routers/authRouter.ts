@@ -16,12 +16,12 @@ router.post("/register", async (req, res) => {
 
     const hash: string = hashPassword(user.password);
 
-    const hashedUser = { ...user, password: hash };
+    const hashedUser: User = { ...user, password: hash };
 
-    await Users.add(hashedUser);
+    const newUser: returnedUser = await Users.add(hashedUser);
 
     res.status(201).json({
-      message: `Successfully registered user ${user.username}`
+      message: `Successfully registered user ${newUser.username}`
     });
   } catch (error) {
     res.status(500).json({ error, message: "Error adding user" });
@@ -32,7 +32,7 @@ router.post("/register", async (req, res) => {
 
 router.post("/login", async (req, res) => {
   try {
-    const loginInfo: Credentials = req.body;
+    const loginInfo: Credentials = req.body.user;
     const user: returnedUser = await Users.findByUsername(loginInfo.username);
     if (isValidHash(loginInfo.password, user.password)) {
       const token = generateToken(user);
@@ -48,7 +48,7 @@ router.post("/login", async (req, res) => {
   }
 });
 
-function hashPassword(pass: string) {
+function hashPassword(pass: string): string {
   return bcrypt.hashSync(pass, 10);
 }
 
@@ -67,3 +67,5 @@ function generateToken(user: returnedUser): string {
   };
   return jwt.sign(payload, secret, options);
 }
+
+module.exports = router;

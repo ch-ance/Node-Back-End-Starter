@@ -1,4 +1,5 @@
 import knex = require("knex");
+
 import { returnedUser, User } from "../interfaceDeclarations";
 const db: knex = require("../database/dbConfig");
 
@@ -18,9 +19,10 @@ async function findById(id: number): Promise<returnedUser> {
 }
 
 async function add(user: User): Promise<returnedUser> {
-  return await db("users")
+  const newUser: returnedUser = await db("users")
     .insert(user)
-    .returning("*");
+    .returning("username");
+  return newUser;
 }
 
 async function findByUsername(username: string): Promise<returnedUser> {
