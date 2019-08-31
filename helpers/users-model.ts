@@ -16,3 +16,12 @@ async function add(user: Credentials): Promise<returnedUser> {
     .insert(user)
     .returning("*");
 }
+
+async function findByUsername(username: string): Promise<returnedUser> {
+  const user: returnedUser = await db("users")
+    .select("*")
+    .where({ username })
+    .first();
+
+  return user;
+}
