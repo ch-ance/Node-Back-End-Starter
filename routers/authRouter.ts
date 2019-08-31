@@ -1,36 +1,51 @@
 import express = require("express");
 import bcrypt = require("bcryptjs");
 import jwt = require("jsonwebtoken");
-import { Credentials, returnedUser } from "../interfaceDeclarations";
+import { Credentials, returnedUser, User } from "../interfaceDeclarations";
+const Users = require("../helpers/users-model");
 
 const secret = process.env.JWT_SECRET || "secret";
 
 const router = express.Router();
 
-// interface definitions
-
-// interface Credentials {
-//   username: string;
-//   password: string;
-//   email?: string;
-//   firstName?: string;
-//   lastName?: string;
-// }
-
-// interface returnedUser extends Credentials {
-//   id: number;
-// }
-
 // Register Endpoint
 
 router.post("/register", async (req, res) => {
-  const user: Credentials = req.body;
+  try {
+    const user: User = req.body.user;
 
-  const hash: string = hashPassword(user.password);
+    const hash: string = hashPassword(user.password);
 
-  const hashedUser = { ...user, password: hash };
+    const hashedUser = { ...user, password: hash };
 
-  //   await Users.add
+    await Users.add(hashedUser);
+
+    res.status(201).json({
+      message: `Successfully registered user ${user.username}`
+    });
+  } catch (error) {
+    res.status(500).json({ error, message: "Error adding user" });
+  }
+});
+
+// Login Endpoint
+
+router.post("/login", async (req, res) => {
+  try {
+    const loginInfo: Credentials = req.body;
+    const user: returnedUser = await Users.findByUsername(loginInfo.username);
+    if (isValidHash(loginInfo.password, user.password)) {
+      const token = generateToken(user);
+      res.status(200).json({
+        message: `Access granted for ${user.username}`,
+        token
+      });
+    } else {
+      throw new Error();
+    }
+  } catch (error) {
+    res.status(401).json({ message: "Unauthorized" });
+  }
 });
 
 function hashPassword(pass: string) {

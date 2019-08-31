@@ -1,6 +1,12 @@
 import knex = require("knex");
-import { returnedUser, Credentials } from "../interfaceDeclarations";
+import { returnedUser, User } from "../interfaceDeclarations";
 const db: knex = require("../database/dbConfig");
+
+module.exports = {
+  findById,
+  findByUsername,
+  add
+};
 
 async function findById(id: number): Promise<returnedUser> {
   const user: returnedUser = await db("users")
@@ -11,7 +17,7 @@ async function findById(id: number): Promise<returnedUser> {
   return user;
 }
 
-async function add(user: Credentials): Promise<returnedUser> {
+async function add(user: User): Promise<returnedUser> {
   return await db("users")
     .insert(user)
     .returning("*");
