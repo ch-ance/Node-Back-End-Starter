@@ -1,6 +1,7 @@
 import express = require("express");
 import bcrypt = require("bcryptjs");
 import jwt = require("jsonwebtoken");
+import { Credentials, returnedUser } from "../interfaceDeclarations";
 
 const secret = process.env.JWT_SECRET || "secret";
 
@@ -8,17 +9,17 @@ const router = express.Router();
 
 // interface definitions
 
-interface Credentials {
-  username: string;
-  password: string;
-  email?: string;
-  firstName?: string;
-  lastName?: string;
-}
+// interface Credentials {
+//   username: string;
+//   password: string;
+//   email?: string;
+//   firstName?: string;
+//   lastName?: string;
+// }
 
-interface returnedUser extends Credentials {
-  id: number;
-}
+// interface returnedUser extends Credentials {
+//   id: number;
+// }
 
 // Register Endpoint
 

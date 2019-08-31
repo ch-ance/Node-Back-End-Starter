@@ -1,7 +1,7 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.up = function (knex) {
-    return knex.schema.createTable("users", function (users) {
+    return knex.schema.createTable("users", users => {
         users.increments();
         users
             .string("username", 32)
