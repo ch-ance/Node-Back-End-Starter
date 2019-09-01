@@ -3,7 +3,7 @@ import helmet = require("helmet");
 import morgan = require("morgan");
 import cors = require("cors");
 const authRouter = require("../routers/authRouter");
-
+const usersRouter = require("../routers/usersRouter");
 const server: express.Application = express();
 
 server.use(helmet());
@@ -17,6 +17,7 @@ server.get("/", (_req, res) => {
 });
 
 server.use("/api/auth", authRouter);
+server.use("/api/users", usersRouter);
 
 const port: number = 5000;
 
