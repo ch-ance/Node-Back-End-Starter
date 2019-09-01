@@ -11,18 +11,27 @@ async function findById(id) {
         .select("*")
         .where({ id })
         .first();
-    return user;
+    return {
+        ...user,
+        password: "n/a"
+    };
 }
 async function add(user) {
     const newUser = await db("users")
         .insert(user)
         .returning("username");
-    return newUser;
+    return {
+        ...newUser,
+        password: "n/a"
+    };
 }
 async function findByUsername(username) {
     const user = await db("users")
         .select("*")
         .where({ username })
         .first();
-    return user;
+    return {
+        ...user,
+        password: "n/a"
+    };
 }

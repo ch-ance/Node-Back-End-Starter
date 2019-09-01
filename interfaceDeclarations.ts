@@ -11,4 +11,5 @@ export interface User extends Credentials {
 
 export interface returnedUser extends User {
   id: number;
+  password: "n/a";
 }
