@@ -56,7 +56,7 @@ Returns:
 
 ### [POST] Login
 
-#### /api/auth/login
+#### `/api/auth/login`
 
 > **Required:** `username` & `password`
 
@@ -75,14 +75,14 @@ Returns:
 ```json
 {
     "message": "Welcome user1",
-    "token": *a JSON web token*
+    "token": a JSON web token
 }
 ```
 ---
 
 ### [GET] User by ID
 
-#### /api/users/id/:id
+#### `/api/users/id/:id`
 > Restricted endpoint, requires a valid json web token
 
 ```http
@@ -104,7 +104,7 @@ Returns:
 
 ### [GET] User by Username
 
-#### /api/users/username/:username
+#### `/api/users/username/:username`
 
 > Restricted endpoint, requires a valid json web token
 
