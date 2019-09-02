@@ -6,7 +6,10 @@ const router = express.Router();
 
 // Get User endpoints : restricted
 // get by user id
-router.get("/id/:id", restricted, (req, res) => {
+
+router.use(restricted);
+
+router.get("/id/:id", (req, res) => {
   const { id } = req.params;
 
   try {
@@ -19,7 +22,7 @@ router.get("/id/:id", restricted, (req, res) => {
 });
 
 // get by username
-router.get("/username/:username", restricted, (req, res) => {
+router.get("/username/:username", (req, res) => {
   const { username } = req.params;
 
   try {

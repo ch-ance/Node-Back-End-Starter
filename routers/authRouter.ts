@@ -37,7 +37,7 @@ router.post("/login", async (req, res) => {
     if (isValidHash(loginInfo.password, user.password)) {
       const token = generateToken(user);
       res.status(200).json({
-        message: `Access granted for ${user.username}`,
+        message: `User logged in`,
         token
       });
     } else {

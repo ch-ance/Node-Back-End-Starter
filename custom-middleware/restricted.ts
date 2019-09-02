@@ -8,7 +8,11 @@ interface request extends express.Request {
   jwtToken: string | object;
 }
 
-function restricted(req: request, res: express.Response, next: Function): void {
+function restricted(
+  req: request,
+  res: express.Response,
+  next: express.NextFunction
+): void {
   const token: string | undefined = req.headers.authorization;
 
   if (token) {
@@ -24,3 +28,5 @@ function restricted(req: request, res: express.Response, next: Function): void {
     res.status(401).json({ message: "Unauthorized" });
   }
 }
+
+module.exports = restricted;
