@@ -13,7 +13,7 @@ async function findById(id) {
         .first();
     return {
         ...user,
-        password: "n/a"
+        password: undefined
     };
 }
 async function add(user) {
@@ -22,7 +22,7 @@ async function add(user) {
         .returning("username");
     return {
         ...newUser,
-        password: "n/a"
+        password: undefined
     };
 }
 async function findByUsername(username) {
@@ -32,6 +32,6 @@ async function findByUsername(username) {
         .first();
     return {
         ...user,
-        password: "n/a"
+        password: undefined
     };
 }
