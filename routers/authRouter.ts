@@ -1,7 +1,12 @@
 import express = require("express");
 import bcrypt = require("bcryptjs");
 import jwt = require("jsonwebtoken");
-import { Credentials, returnedUser, User } from "../interfaceDeclarations";
+import {
+  Credentials,
+  returnedUser,
+  User,
+  userPasswordHidden
+} from "../interfaceDeclarations";
 const Users = require("../helpers/users-model");
 
 const secret = process.env.JWT_SECRET || "secret";
@@ -10,42 +15,46 @@ const router = express.Router();
 
 // Register Endpoint
 
-router.post("/register", async (req, res) => {
-  try {
-    const user: User = req.body.user;
+router.post("/register", (req, res) => {
+  const user: User = req.body.user;
 
-    const hash: string = hashPassword(user.password);
+  const hash: string = hashPassword(user.password);
 
-    const hashedUser: User = { ...user, password: hash };
+  const hashedUser: User = { ...user, password: hash };
 
-    const newUser: returnedUser = await Users.add(hashedUser);
+  console.log("hashed the user", hashedUser);
 
-    res.status(201).json({
-      message: `Successfully registered user ${newUser.username}`
-    });
-  } catch (error) {
-    res.status(500).json({ error, message: "Error adding user" });
+  const newUser: userPasswordHidden = Users.add(hashedUser);
+
+  if (newUser) {
+    res.status(201).json(newUser);
   }
+
+  res.status(500).json({ message: "Error adding user" });
 });
 
 // Login Endpoint
 
-router.post("/login", async (req, res) => {
-  try {
-    const loginInfo: Credentials = req.body.user;
-    const user: returnedUser = await Users.findByUsername(loginInfo.username);
-    if (isValidHash(loginInfo.password, user.password)) {
+router.post("/login", (req, res) => {
+  const loginInfo: Credentials = req.body.user;
+
+  function callback(user: returnedUser) {
+    if (user && bcrypt.compareSync(loginInfo.password, user.password)) {
       const token = generateToken(user);
       res.status(200).json({
-        message: `User logged in`,
+        message: `Welcome ${user.username}`,
         token
       });
     } else {
-      throw new Error();
+      res.status(401).json({ message: "Unauthorized" });
     }
-  } catch (error) {
-    res.status(401).json({ message: "Unauthorized" });
   }
+
+  Users.findByUsername(loginInfo.username)
+    .then(callback)
+    .catch(() => {
+      res.status(500).json({ message: "Something went wrong" });
+    });
 });
 
 function hashPassword(pass: string): string {

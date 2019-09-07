@@ -25,24 +25,26 @@ async function findById(id: number): Promise<userPasswordHidden> {
   };
 }
 
-async function add(user: User): Promise<userPasswordHidden> {
-  const newUser: returnedUser = await db("users")
-    .insert(user)
-    .returning("username");
-  return {
-    ...newUser,
-    password: undefined
-  };
+async function add(user: User): Promise<userPasswordHidden | undefined> {
+  console.log("Attemping to add: ", user);
+  try {
+    const newUser: returnedUser = await db("users")
+      .insert(user)
+      .returning("*");
+    console.log("Should have added the user: ", newUser);
+    return {
+      ...newUser,
+      password: undefined
+    };
+  } catch (error) {
+    console.log("THERE WAS AN ERROR ADDING!!!", error);
+    return undefined;
+  }
 }
 
-async function findByUsername(username: string): Promise<userPasswordHidden> {
-  const user: returnedUser = await db("users")
+function findByUsername(username: string): Promise<userPasswordHidden> {
+  return db("users")
     .select("*")
     .where({ username })
     .first();
-
-  return {
-    ...user,
-    password: undefined
-  };
 }
